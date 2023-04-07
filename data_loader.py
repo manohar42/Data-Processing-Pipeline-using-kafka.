@@ -58,6 +58,8 @@ class DataLoader:
         trips.to_csv(save_loc, index=False)
 
         # TODO: Your code here
+        with self.driver.session() as session:
+            session.run("LOAD CSV WITH HEADERS FROM 'file:///yellow_tripdata_2022-03.csv' AS row FIELDTERMINATOR ',' CREATE (:Trip {tpep_pickup_datetime: row.tpep_pickup_datetime, tpep_dropoff_datetime: row.tpep_dropoff_datetime, PULocationID: toInteger(row.PULocationID), DOLocationID: toInteger(row.DOLocationID), trip_distance: toFloat(row.trip_distance), fare_amount: toFloat(row.fare_amount)})")
 
 
 def main():
