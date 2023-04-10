@@ -58,61 +58,31 @@ class DataLoader:
         trips.to_csv(save_loc, index=False)
 
         # TODO: Your code here
-#         with self.driver.session() as session:
-#             for i, row in trips.iterrows():
-#                 # Create the pickup location node
-#                 session.run(
-#                     "MERGE (pickup:Location {name: $pickup_loc})",
-#                     pickup_loc=int(row["PULocationID"])
-#                 )
-                
-#                 # Create the dropoff location node
-#                 session.run(
-#                     "MERGE (dropoff:Location {name: $dropoff_loc})",
-#                     dropoff_loc=int(row["DOLocationID"])
-#                 )
-                
-#                 # Create the trip relationship
-#                 session.run(
-#                     "MATCH (pickup:Location {name: $pickup_loc}), (dropoff:Location {name: $dropoff_loc}) "
-#                     "CREATE (pickup)-[trip:TRIP {distance: $distance, fare: $fare, pickup_dt: $pickup_dt, dropoff_dt: $dropoff_dt}]->(dropoff)",
-#                     pickup_loc=int(row["PULocationID"]),
-#                     dropoff_loc=int(row["DOLocationID"]),
-#                     distance=float(row["trip_distance"]),
-#                     fare=float(row["fare_amount"]),
-#                     pickup_dt=row["tpep_pickup_datetime"],
-#                     dropoff_dt=row["tpep_dropoff_datetime"]
-#                 )
-#         with self.driver.session() as session:
-#             for i, row in trips.iterrows():
-#                 # Create the pickup location node
-#                 session.run(
-#                     "MERGE (pickup:Location {name: $pickup_loc})",
-#                     pickup_loc=int(row["PULocationID"])
-#                 )
-                
-#                 # Create the dropoff location node
-#                 session.run(
-#                     "MERGE (dropoff:Location {name: $dropoff_loc})",
-#                     dropoff_loc=int(row["DOLocationID"])
-#                 )
-                
-#                 # Create the trip relationship
-#                 session.run(
-#                     "MATCH (pickup:Location {name: $pickup_loc}), (dropoff:Location {name: $dropoff_loc}) "
-#                     "CREATE (pickup)-[trip:TRIP {distance: $distance, fare: $fare, pickup_dt: $pickup_dt, dropoff_dt: $dropoff_dt}]->(dropoff)",
-#                     pickup_loc=int(row["PULocationID"]),
-#                     dropoff_loc=int(row["DOLocationID"]),
-#                     distance=float(row["trip_distance"]),
-#                     fare=float(row["fare_amount"]),
-#                     pickup_dt=row["tpep_pickup_datetime"],
-#                     dropoff_dt=row["tpep_dropoff_datetime"]
-#                 )
-                
-                
         with self.driver.session() as session:
-            session.run("LOAD CSV WITH HEADERS FROM 'file:///yellow_tripdata_2022-03.csv' AS row FIELDTERMINATOR ',' CREATE (:Trip {tpep_pickup_datetime: row.tpep_pickup_datetime, tpep_dropoff_datetime: row.tpep_dropoff_datetime, PULocationID: toInteger(row.PULocationID), DOLocationID: toInteger(row.DOLocationID), trip_distance: toFloat(row.trip_distance), fare_amount: toFloat(row.fare_amount)})")
-
+            for i, row in trips.iterrows():
+                # Create the pickup location node
+                session.run(
+                    "MERGE (pickup:Location {name: $pickup_loc})",
+                    pickup_loc=int(row["PULocationID"])
+                )
+                
+                # Create the dropoff location node
+                session.run(
+                    "MERGE (dropoff:Location {name: $dropoff_loc})",
+                    dropoff_loc=int(row["DOLocationID"])
+                )
+                
+                # Create the trip relationship
+                session.run(
+                    "MATCH (pickup:Location {name: $pickup_loc}), (dropoff:Location {name: $dropoff_loc}) "
+                    "CREATE (pickup)-[trip:TRIP {distance: $distance, fare: $fare, pickup_dt: $pickup_dt, dropoff_dt: $dropoff_dt}]->(dropoff)",
+                    pickup_loc=int(row["PULocationID"]),
+                    dropoff_loc=int(row["DOLocationID"]),
+                    distance=float(row["trip_distance"]),
+                    fare=float(row["fare_amount"]),
+                    pickup_dt=row["tpep_pickup_datetime"],
+                    dropoff_dt=row["tpep_dropoff_datetime"]
+                )
 
 def main():
 
