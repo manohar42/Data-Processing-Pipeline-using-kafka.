@@ -61,16 +61,16 @@ class DataLoader:
         with self.driver.session() as session:
             for i, row in trips.iterrows():
                 # Create the pickup location node
-                session.run(
-                    "MERGE (pickup:Location {name: $pickup_loc})",
-                    pickup_loc=int(row["PULocationID"])
-                )
+#                 session.run(
+#                     "MERGE (pickup:Location {name: $pickup_loc})",
+#                     pickup_loc=int(row["PULocationID"])
+#                 )
                 
-                # Create the dropoff location node
-                session.run(
-                    "MERGE (dropoff:Location {name: $dropoff_loc})",
-                    dropoff_loc=int(row["DOLocationID"])
-                )
+#                 # Create the dropoff location node
+#                 session.run(
+#                     "MERGE (dropoff:Location {name: $dropoff_loc})",
+#                     dropoff_loc=int(row["DOLocationID"])
+#                 )
                 
                 # Create the trip relationship
                 session.run(
