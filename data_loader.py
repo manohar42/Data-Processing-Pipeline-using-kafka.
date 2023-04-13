@@ -58,22 +58,23 @@ class DataLoader:
         trips.to_csv(save_loc, index=False)
 
         # TODO: Your code here
+        q_pickup_loc = "MERGE (pickup:Location {name: $pickup_loc})"
+        q_dropoff_loc = "MERGE (dropoff:Location {name: $dropoff_loc})"
+        q_trip_rel = """
+            MATCH (pickup:Location {name: $pickup_loc}), (dropoff:Location {name: $dropoff_loc}) 
+            CREATE (pickup)-[trip:TRIP {distance: $distance, fare: $fare, pickup_dt: $pickup_dt, dropoff_dt: $dropoff_dt}]->(dropoff)
+        """
+
         with self.driver.session() as session:
             for i, row in trips.iterrows():
                 # Creating the pickup location node
-                session.run("MERGE (pickup:Location {name: $pickup_loc})",
-                    pickup_loc=int(row["PULocationID"])
-                )
-                
+                session.run(q_query_pickup_loc, pickup_loc=int(row["PULocationID"]))
+
                 # Create the dropoff location node
-                session.run("MERGE (dropoff:Location {name: $dropoff_loc})",
-                    dropoff_loc=int(row["DOLocationID"])
-                )
-                
+                session.run(q_dropoff_loc, dropoff_loc=int(row["DOLocationID"]))
+
                 # Create the trip relationship
-                session.run(
-                    "MATCH (pickup:Location {name: $pickup_loc}), (dropoff:Location {name: $dropoff_loc}) "
-                    "CREATE (pickup)-[trip:TRIP {distance: $distance, fare: $fare, pickup_dt: $pickup_dt, dropoff_dt: $dropoff_dt}]->(dropoff)",
+                session.run(q_trip_rel, 
                     pickup_loc=int(row["PULocationID"]),
                     dropoff_loc=int(row["DOLocationID"]),
                     distance=float(row["trip_distance"]),
