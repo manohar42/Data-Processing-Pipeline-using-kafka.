@@ -33,7 +33,7 @@ Data-Processing-Pipeline-using-Kafka/
 
 3. Install required Python dependencies:
    ```sh
-   pip install kafka-python neo4j pandas
+   pip install kafka-python neo4j
    ```
 
 ### Running the Pipeline
